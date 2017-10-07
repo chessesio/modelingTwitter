@@ -6,7 +6,7 @@ class User:
         self.username = username
         self.email = email
         self.password = password
-        self.prof_pic = prof_pic
+        self.prof_pic = ""
         self.tweets = []
 
     def tweet_action(self,a_tweet):
