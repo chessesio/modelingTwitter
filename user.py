@@ -14,3 +14,7 @@ class User:
 
     def retweet_action(self,a_retweet):
         self.tweets.append(a_retweet)
+
+    def get_tweets(self):
+        for tweet in user.tweets:
+            print(tweet)
