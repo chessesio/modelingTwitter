@@ -2,7 +2,6 @@
 # this module can signup users an, sign them in and out
 
 import user as usr
-print(usr.User)
 import tweet
 import comments
 
@@ -23,21 +22,24 @@ class Twitter:
         self.logged_in = None
 
     def find_user(self, name_or_email):
-        for user in self.user_list:
-            if user.username == name_or_email or user.email == name_or_email:
-                return user
-        
-        return None
+        print(self.user_list)
+        for user_ in self.user_list:
+
+            if user_.username == name_or_email:
+                return user_
+        return False
+
+twit = Twitter()
 
 def main():
 
     main_loop = True
-
+    
     while main_loop:
 
         print("Welcome The Twitter Clone")
 
-        twit = Twitter()
+        
         option = int(input("1 New to twitter? Sign Up\n2 Already have an account? Log In\n"))
 
         if option == 1:#sign up sequence
@@ -50,6 +52,7 @@ def main():
             password_ = input("Enter a password: ")
 
             twit.sign_up(usr.User(name_, username_, email_, password_))
+            # print(twit.user_list)
 
         elif option == 2:#Log in sequence
             print("Welcome Back")
@@ -58,85 +61,83 @@ def main():
             password_ = input("Enter password: ")
 
             my_user = twit.find_user(name_)
-
             if my_user:
                 if my_user.password == password_:
-                    twit.sign_in(user)
+                    twit.sign_in(my_user)
                     print("You are now logged in")
+                    home()
 
-                    home = int(input("1 Tweet\n2 Retweet\n3 View Profile\n4 Log out\n\n"))
-
-                    for user in twit.user_list:#Get tweets
-                        user.get_tweets
-
-                    if home == 1:
-                        
-                        tweet_type = int(input("\n1 Text or\n2 Picture\n"))
-                        
-                        if tweet_type == 1:
-
-                            tweet_prompt = input("Type your tweet here: \n")
-                            
-                            if len(tweet_prompt) <= 280 and len(tweet_prompt) > 0:
-                                tweet_username_ = twit.logged_in.username
-                                tweet_message_ = tweet_prompt
-
-                                tweet_ = tweet.Tweet(tweet_username_,tweet_message_)
-                                twit.logged_in.tweet_action(tweet_)
-
-                            else:
-                                print("Your tweet is too long...")
-                    
-                    elif tweet_type == 2:
-
-                        pass
 
             else:
                 print("Wrong username or password")
 
-
-
-
-            # for user in twit.user_list:
-                
-            #     if user.password == password_ and (user.username == name_ or user.email == name_):
-                
-            #         twit.sign_in(user)
-            #         print("You are now logged in")
-
-            #         twit = Twitter()
-            #         home = int(input("1 Tweet\n2 Retweet\n3 View Profile\n4 Log out\n\n"))
-
-            #         for user in twit.user_list:#Get tweets
-            #             user.get_tweets
-
-            #         if home == 1:
-                        
-            #             tweet_type = int(input("\n1 Text or\n2 Picture\n"))
-                        
-            #             if tweet_type == 1:
-
-            #                 tweet_prompt = input("Type your tweet here: \n")
-                            
-            #                 if len(tweet_prompt) <= 280 and len(tweet_prompt) > 0:
-            #                     tweet_username_ = twit.logged_in.username
-            #                     tweet_message_ = tweet_prompt
-
-            #                     tweet_ = tweet.Tweet(tweet_username_,tweet_message_)
-            #                     twit.logged_in.tweet_action(tweet_)
-
-            #                 else:
-            #                     print("Your tweet is too long...")
-                    
-            #         elif tweet_type == 2:
-
-            #             pass
-                
-            #     else:
-            #         print("Wrong username or email!\nTry Again.")
-
         else:
             print("Invalid option")
+
+
+# home function to be called after sign up
+def home():
+    home_ = int(input("1 Tweet\n2 View Profile\n3 Log out\n\n"))
+
+    twit.logged_in.get_tweets()
+
+    if home_ == 1:
+
+        tweet_type = int(input("\n1 Text or\n2 Picture\n"))
+        
+        if tweet_type == 1:
+
+            tweet_prompt = input("Type your tweet here: \n")
+            
+            if len(tweet_prompt) <= 280 and len(tweet_prompt) > 0:
+                #Take user's username
+                #Take the tweet message
+                #Append to uer's tweets list
+                
+                tweet_username_ = twit.logged_in.username
+                new_tweet = tweet.Tweet(tweet_username_,tweet_prompt)
+
+                twit.logged_in.tweet_action(new_tweet)
+
+            else:
+                print("Your tweet is too long...")
+
+        elif tweet_type == 2:
+
+                tweet_prompt = input("\nType your tweet here: \n")
+                picture_ = input("Upload picture:\n\n")
+
+                if len(tweet_prompt) <= 280 and len(tweet_prompt) > 0:
+                    #Take user's username
+                    #Take the tweet message
+                    #Append to uer's tweets list
+                    
+                    tweet_username_ = twit.logged_in.username
+
+                    new_tweet = tweet.Tweet(username=tweet_username_,message=tweet_prompt,picture=picture_)
+
+                    twit.logged_in.tweet_action(new_tweet)
+
+                else:
+                    print("Your tweet is too long...")
+    
+    elif home_ == 2:
+        profile()
+
+    elif home_ == 3:
+        twit.logged_in = None
+
+    else:
+        print("Invalid choice")
+
+def profile():
+    print("Name: {}\nUsername: {}\nProfile Picture: {}\n".format(twit.logged_in.name,twit.logged_in.username,twit.logged_in.prof_pic))
+
+    twit.logged_in.get_tweets()
+
+    go_home = input("1. Home")
+    if go_home == "1":
+        home()
 
 if __name__ == "__main__":
     main()

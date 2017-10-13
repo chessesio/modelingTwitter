@@ -14,7 +14,7 @@ class User:
         self.tweets = []
 
 #   user tweeting action
-    def tweet_action(self,username_,message_):
+    def tweet_action(self,new_tweet):
         self.tweets.append(new_tweet)
 
 #   user can retweet
@@ -23,5 +23,5 @@ class User:
 
 #   display a users tweets
     def get_tweets(self):
-        for tweet in user.tweets:
+        for tweet in self.tweets:
             print(tweet)

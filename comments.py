@@ -1,3 +1,5 @@
+# construct comment object.
+
 from datetime import datetime
 
 class Comment:
