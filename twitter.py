@@ -57,14 +57,13 @@ def main():
             name_ = input("Enter your username or email: ")
             password_ = input("Enter password: ")
 
-            for user in twit.user_list:
-                
-                if user.password == password_ and (user.username == name_ or user.email == name_):
-                
+            my_user = twit.find_user(name_)
+
+            if my_user:
+                if my_user.password == password_:
                     twit.sign_in(user)
                     print("You are now logged in")
 
-                    twit = Twitter()
                     home = int(input("1 Tweet\n2 Retweet\n3 View Profile\n4 Log out\n\n"))
 
                     for user in twit.user_list:#Get tweets
@@ -91,9 +90,50 @@ def main():
                     elif tweet_type == 2:
 
                         pass
+
+            else:
+                print("Wrong username or password")
+
+
+
+
+            # for user in twit.user_list:
                 
-                else:
-                    print("Wrong username or email!\nTry Again.")
+            #     if user.password == password_ and (user.username == name_ or user.email == name_):
+                
+            #         twit.sign_in(user)
+            #         print("You are now logged in")
+
+            #         twit = Twitter()
+            #         home = int(input("1 Tweet\n2 Retweet\n3 View Profile\n4 Log out\n\n"))
+
+            #         for user in twit.user_list:#Get tweets
+            #             user.get_tweets
+
+            #         if home == 1:
+                        
+            #             tweet_type = int(input("\n1 Text or\n2 Picture\n"))
+                        
+            #             if tweet_type == 1:
+
+            #                 tweet_prompt = input("Type your tweet here: \n")
+                            
+            #                 if len(tweet_prompt) <= 280 and len(tweet_prompt) > 0:
+            #                     tweet_username_ = twit.logged_in.username
+            #                     tweet_message_ = tweet_prompt
+
+            #                     tweet_ = tweet.Tweet(tweet_username_,tweet_message_)
+            #                     twit.logged_in.tweet_action(tweet_)
+
+            #                 else:
+            #                     print("Your tweet is too long...")
+                    
+            #         elif tweet_type == 2:
+
+            #             pass
+                
+            #     else:
+            #         print("Wrong username or email!\nTry Again.")
 
         else:
             print("Invalid option")
