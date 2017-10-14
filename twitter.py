@@ -4,19 +4,35 @@
 import user as usr
 import tweet
 import comments
-
+import csv
+import os
 
 class Twitter:
 
     def __init__(self):
         self.logged_in = None
-        self.user_list = []
+        # self.user_list = []
 
-    def sign_up(self,user):
-        self.user_list.append(user)
+    def sign_up(self,name_,username_,email_,password_,profile_pic_):
+        file_exist = os.path.isfile("users.csv")
 
-    def sign_in(self,user):
-        self.logged_in = user
+        with open("users.csv","a") as userlist:
+
+            fieldnames = ["name", "username","email","password","profile picture"]
+
+            writer = csv.DictWriter(userlist,fieldnames=fieldnames)
+
+            if not file_exist:
+                writer.writeheader()
+            
+            writer.writerow({"name":name_,"username":username_,"email":email_,"password":password_,"profile picture":profile_pic_})
+
+        # self.user_list.append(user)
+
+    def sign_in(self,user_):
+        # name,username,email,password
+        # self.logged_in = user.User(name=user_.get("name"),username=user_.get("username"),email=user_.get("email"),password=user_.password)
+        self.logged_in = user_
 
     def sign_out(self):
         self.logged_in = None
@@ -32,44 +48,58 @@ class Twitter:
 twit = Twitter()
 
 def main():
-
-    main_loop = True
-    
-    while main_loop:
-
+    loop = True
+    while loop:
         print("Welcome The Twitter Clone")
 
-        
         option = int(input("1 New to twitter? Sign Up\n2 Already have an account? Log In\n"))
 
         if option == 1:#sign up sequence
-                
+
             print("Welcome to twitter!\nJust a few details and we\'re done :)\n")
             
             name_ = input("Enter your name: ")
             username_ = input("Enter a username: ")
             email_ = input("Enter an email address: ")
             password_ = input("Enter a password: ")
+            profile_pic_ = None
 
-            twit.sign_up(usr.User(name_, username_, email_, password_))
+            twit.sign_up(name_, username_, email_, password_,profile_pic_)
             # print(twit.user_list)
 
         elif option == 2:#Log in sequence
-            print("Welcome Back")
+            print("\nWelcome Back\n")
 
             name_ = input("Enter your username or email: ")
             password_ = input("Enter password: ")
 
-            my_user = twit.find_user(name_)
-            if my_user:
-                if my_user.password == password_:
-                    twit.sign_in(my_user)
-                    print("You are now logged in")
-                    home()
+            with open("users.csv","r") as userlist:
+                reader = csv.DictReader(userlist)
+                for row in reader:
+                    if (name_ == row.get("username") or name_ == row.get("email")) and password_ == row.get("password"):
+                        name_ = row.get("name")
+                        username_ = row.get("username")
+                        email_ = row.get("email")
+                        password_ = row.get("password")
+                        profile_pic_ = row.get("profile picture")
+                        
+                        twit.sign_in(usr.User(name_,username_,email_,password_))
+                        
+                        home()
+
+                    else:
+                        print("Wrong Username/email or password")
+
+                # my_user = twit.find_user(name_)
+                # if my_user:
+                #     if my_user.password == password_:
+                #         twit.sign_in(my_user)
+                #         print("\nYou are now logged in\n")
+                #         home()
 
 
-            else:
-                print("Wrong username or password")
+                # else:
+                #     print("Wrong username or password")
 
         else:
             print("Invalid option")
@@ -126,6 +156,7 @@ def home():
 
     elif home_ == 3:
         twit.logged_in = None
+        
 
     else:
         print("Invalid choice")

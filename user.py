@@ -10,7 +10,7 @@ class User:
         self.username = username
         self.email = email
         self.password = password
-        self.prof_pic = None
+        self.prof_pic = "upload a picture"
         self.tweets = []
 
 #   user tweeting action
